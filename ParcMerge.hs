@@ -2,8 +2,8 @@ module ParcMerge where
 
 import ParcSt2St
 
-transform :: (ParseState a -> ParseState b) -> (a -> b -> c) -> ParseState a -> ParseState c
-transform c f =
+merge :: (ParseState a -> ParseState b) -> (a -> b -> c) -> ParseState a -> ParseState c
+merge c f =
     (\st ->
         case st of
             Failure -> Failure

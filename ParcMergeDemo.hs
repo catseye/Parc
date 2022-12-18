@@ -12,8 +12,8 @@ many1 c = seq c (many c)
 
 -- Grammar
 
-expr0 = seq (expr1) (many (transform (seq (char '+') expr1) (\v0 v1 -> v0 + v1)))
-expr1 = seq (expr2) (many (transform (seq (char '*') expr2) (\v0 v1 -> v0 * v1)))
+expr0 = seq (expr1) (many (merge (seq (char '+') expr1) (\v0 v1 -> v0 + v1)))
+expr1 = seq (expr2) (many (merge (seq (char '*') expr2) (\v0 v1 -> v0 * v1)))
 expr2 = alt number parenthesized
 parenthesized = seq (char '(') (seq expr0 (char ')'))
 
@@ -30,7 +30,7 @@ digit = pred (\c v -> case c of
     '9' -> Just 9
     _   -> Nothing)
 
-accDigit = transform digit (\v0 v1 -> v0 * 10 + v1)
+accDigit = merge digit (\v0 v1 -> v0 * 10 + v1)
 
 number = seq (update $ \v -> 0) (many1 accDigit)
 

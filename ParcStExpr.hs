@@ -25,8 +25,8 @@ many1 c = seq c (many c)
 
 -- Grammar
 
-expr0 = seq (expr1) (transform (seq (char '+') expr1) (\v0 v1 -> v0 + v1))
-expr1 = seq (expr2) (transform (seq (char '*') expr2) (\v0 v1 -> v0 * v1))
+expr0 = seq (expr1) (many (transform (seq (char '+') expr1) (\v0 v1 -> v0 + v1)))
+expr1 = seq (expr2) (many (transform (seq (char '*') expr2) (\v0 v1 -> v0 * v1)))
 expr2 = alt number parenthesized
 parenthesized = seq (char '(') (seq expr0 (char ')'))
 
@@ -50,3 +50,5 @@ number = seq (update $ \v -> 0) (many1 accDigit)
 --- Demo
 
 test1 = expr0 $ Parsing "3*(3*3+1*1)+1*1" 0
+test2 = expr0 $ Parsing "3*2+1*9" 0
+test3 = expr0 $ Parsing "3*(2+1)*9" 0

@@ -7,14 +7,16 @@ import Parc
 
 char x = pred (\c -> x == c)
 try c = alt c ok
+many1 c = seq c (many c)
 
 -- Grammar
 
 whitespace = char ' '
+whitespaces = many whitespace
 bit = alt (char '0') (char '1')
-bits = seq bit (many bit)
+bits = many1 bit
 bitstring = seq bits (try (char 'B'))
-docco = many (seq (many whitespace) bitstring)
+docco = many (seq whitespaces bitstring)
 
 -- Demo
 test1 = docco $ Parsing "1110B   100B"

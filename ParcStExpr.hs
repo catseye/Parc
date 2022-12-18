@@ -1,7 +1,21 @@
 module ParcStExpr where
 import Prelude hiding (pred, seq, any)
 
+-- Under development!
+
 import ParcSt
+
+-- Extra combinators
+
+transform :: (ParseState a -> ParseState b) -> (a -> b -> c) -> ParseState a -> ParseState c
+transform c f =
+    (\st ->
+        case st of
+            Failure -> Failure
+            Parsing s0 v0 ->
+                case c st of
+                    Failure -> Failure
+                    Parsing s v1 -> Parsing s (f v0 v1))
 
 -- Helpers
 
@@ -29,10 +43,6 @@ digit = pred (\c v -> case c of
     '9' -> Just 9
     _   -> Nothing)
 
-accumDigit Failure = Failure
-accumDigit (Parsing s v) =
-    case digit (Parsing s 0) of
-        Failure -> Failure
-        Parsing s' dv -> Parsing s' ((v * 10) + dv)
+accDigit = transform digit (\v0 v1 -> v0 * 10 + v1)
 
-number = seq (update $ \v -> 0) (many1 accumDigit)
+number = seq (update $ \v -> 0) (many1 accDigit)

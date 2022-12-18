@@ -7,6 +7,7 @@ import ParcSt
 
 char x = pred (\c v -> if x == c then Just v else Nothing)
 try c = alt c ok
+many1 c = seq c (many c)
 
 -- Grammar
 
@@ -28,7 +29,10 @@ digit = pred (\c v -> case c of
     '9' -> Just 9
     _   -> Nothing)
 
-number (Parsing s v) =
+accumDigit Failure = Failure
+accumDigit (Parsing s v) =
     case digit (Parsing s 0) of
-        Failure -> (Parsing s v)
-        Parsing s' dv -> number (Parsing s' ((v * 10) + dv))
+        Failure -> Failure
+        Parsing s' dv -> Parsing s' ((v * 10) + dv)
+
+number = seq (update $ \v -> 0) (many1 accumDigit)

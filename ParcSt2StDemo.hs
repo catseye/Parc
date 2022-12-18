@@ -1,7 +1,7 @@
-module ParcStTwoDemo where
+module ParcSt2StDemo where
 import Prelude hiding (pred, seq, any)
 
-import ParcStTwo
+import ParcSt2St
 
 -- Helpers
 

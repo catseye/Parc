@@ -1,4 +1,4 @@
-module ParcStTwo where
+module ParcSt2St where
 
 data ParseState a = Parsing String a
                   | Failure

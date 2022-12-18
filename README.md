@@ -40,7 +40,19 @@ apparent at runtime.)
 
 ### `ParcSt2St.hs`
 
-(Name provisional.)  TODO.
+So we have a very small modification called [`ParcSt2St.hs`](ParcSt2St.hs).
+In this, the `Parser` type is polymorphic on two types, one for input
+and one for output.
+
+Some code that uses this can be found in [`ParcSt2StDemo.hs`](ParcSt2StDemo.hs).
+In fact, it is virtually a drop-in replacement for `ParcSt.hs`, as the type
+signature is simply more general.
+
+It does illuminate the types of the combinators somewhat though; `seq` has a
+type that corresponds to transitivity, while `many` requires that the output
+type is the same as the input type, which makes sense if you think of it as
+a loop that may occur any number of times -- only an output that can be fed
+back into the input would make sense there.
 
 ### ... and more?
 

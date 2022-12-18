@@ -54,6 +54,25 @@ type is the same as the input type, which makes sense if you think of it as
 a loop that may occur any number of times -- only an output that can be fed
 back into the input would make sense there.
 
+### `ParcMerge.hs`
+
+To allow finer manipulation of the parsing state, we extend `ParcSt2St.hs`
+with an extra combinator.  We can't build this combinator out of existing
+combinators; it needs to access the parse state directly.  Also, its
+definition turns out to be somewhat more complicated.  So, this is where
+we start leaving "fits on a page" territory
+
+The [`ParcMerge.hs`](ParcMerge.hs) module extends `ParcSt2St.hs` with a
+combinator called `merge`.  `merge` takes a parser P and a function F which
+takes two state values and returns a third state value as input; it
+produces a new parser as its output.  This new parser applies P, then
+produces a new state by combining the state before P, and the state produced
+by P, using F.
+
+[`ParcMergeDemo.hs`](ParcMergeDemo.hs) demonstrates how this `merge`
+combinator can be used to apply arithmetic operators like `+` and `*`
+when parsing an arithmetic expression.
+
 ### ... and more?
 
 With luck, there will be further experiments added here over time.

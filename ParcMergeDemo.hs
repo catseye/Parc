@@ -1,21 +1,8 @@
-module ParcStExpr where
+module ParcMergeDemo where
 import Prelude hiding (pred, seq, any)
 
--- Under development!
-
-import ParcSt
-
--- Extra combinators
-
-transform :: (ParseState a -> ParseState b) -> (a -> b -> c) -> ParseState a -> ParseState c
-transform c f =
-    (\st ->
-        case st of
-            Failure -> Failure
-            Parsing s0 v0 ->
-                case c st of
-                    Failure -> Failure
-                    Parsing s v1 -> Parsing s (f v0 v1))
+import ParcSt2St
+import ParcMerge
 
 -- Helpers
 

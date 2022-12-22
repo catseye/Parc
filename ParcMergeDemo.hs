@@ -1,7 +1,6 @@
 module ParcMergeDemo where
 import Prelude hiding (pred, seq, any)
 
-import ParcSt2St
 import ParcMerge
 
 -- Helpers

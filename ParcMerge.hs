@@ -1,5 +1,6 @@
-module ParcMerge where
+module ParcMerge (ok, fail, pred, update, seq, alt, many, merge, ParseState(Parsing, Failure)) where
 
+import Prelude hiding (fail, pred, seq)
 import ParcSt2St
 
 merge :: (ParseState a -> ParseState b) -> (a -> b -> c) -> ParseState a -> ParseState c

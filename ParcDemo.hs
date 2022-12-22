@@ -28,9 +28,21 @@ test2 = docco $ Parsing "1110G   100B"
 one = char '1'
 five = seq one (seq one (seq one (seq one one)))
 nine = seq one (seq one (seq one (seq one (seq one (seq one (seq one (seq one one)))))))
-multiple = many (alt nine five)
 
-testb1 = multiple $ Parsing "11111"
-testb2 = multiple $ Parsing "111111111"
-testb3 = multiple $ Parsing "1111111111111111111" -- 19, fail (9+9=18)
-testb4 = multiple $ Parsing "111111111111111111111" -- 21, fail
+-- This is greedy.  It won't backtrack to before the last `alt`.
+multiple = seq (many (alt five nine)) (char '*')
+
+testb1 = multiple $ Parsing "11111*"                 --  5
+testb2 = multiple $ Parsing "111111111*"             --  9
+testb3 = multiple $ Parsing "1111111111*"            -- 10
+testb4 = multiple $ Parsing "1111111111111111111*"   -- 19
+testb5 = multiple $ Parsing "111111111111111111111*" -- 21
+
+-- This is exhaustive.  It will backtrack to before the last `alt`.
+recurso = alt (char '*') (alt (seq five recurso) (seq nine recurso))
+
+testr1 = recurso $ Parsing "11111*"                 --  5
+testr2 = recurso $ Parsing "111111111*"             --  9
+testr3 = recurso $ Parsing "1111111111*"            -- 10
+testr4 = recurso $ Parsing "1111111111111111111*"   -- 19
+testr5 = recurso $ Parsing "111111111111111111111*" -- 21

@@ -73,6 +73,30 @@ by P, using F.
 combinator can be used to apply arithmetic operators like `+` and `*`
 when parsing an arithmetic expression.
 
+### `ParcAssert.hs`
+
+With what we have so far, if we merely accumulate state as we parse,
+we can parse only context-free languages.
+
+But if we enable the parser to succeed or fail based on some predicate
+applied to the parsing state, we can parse context-sensitive languages.
+
+(Actually, if we don't restrict ourselves to sufficiently simple
+predicates, we can parse languages quite beyond the context-sensitive
+range.  For example, we could use a predicate which checks if the
+string passed to it is a valid sentence in Presburger arithmetic.
+Formulating a set of parser combinators which actually (and provably)
+is limited to parsing context-sensitive languages seems like a hard
+(maybe open) problem.)
+
+[`ParcAssertDemo.hs`](ParcAssertDemo.hs) uses `ParcSt2St` and adds a
+combinator called `assert` that takes such a predicate on the parsing
+state, and produces a parser which succeeds only when that predicate
+is true on the current parsing state, failing otherwise.
+
+The demo module gives an example of a parser for a classic
+context-free language: strings of the form `a`^_n_ `b`^_n_ `c`^_n_.
+
 ### ... and more?
 
 With luck, there will be further experiments added here over time.

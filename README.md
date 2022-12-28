@@ -6,7 +6,7 @@ Parser combinator libraries are easy to write.  That's why GitHub is full of the
 I wanted to write a particularly simple one, both to expose its structure,
 and to have something to experiment with.
 
-### `Parc.hs`
+### `Parc`
 
 The basic library is [`Parc.hs`](Parc.hs), about 35 lines long (including
 type declarations and blank lines).
@@ -17,7 +17,7 @@ Generally, you want to do more with the input string than say whether it
 is or is not in the language, yes?  So, there are more extended
 versions here too.
 
-### `ParcSt.hs`
+### `ParcSt`
 
 An extension that adds state to the parser, making it a _stateful parser_,
 is [`ParcSt.hs`](ParcSt.hs).
@@ -38,7 +38,7 @@ languages you have a different problem -- namely, the possibility of
 a type mismatch somewhere in the composite parser which will only become
 apparent at runtime.)
 
-### `ParcSt2St.hs`
+### `ParcSt2St`
 
 So we have a very small modification called [`ParcSt2St.hs`](ParcSt2St.hs).
 In this, the `Parser` type is polymorphic on two types, one for input
@@ -54,7 +54,7 @@ type is the same as the input type, which makes sense if you think of it as
 a loop that may occur any number of times -- only an output that can be fed
 back into the input would make sense there.
 
-### `ParcMerge.hs`
+### `ParcMerge`
 
 To allow finer manipulation of the parsing state, we extend `ParcSt2St.hs`
 with an extra combinator.  We can't build this combinator out of existing
@@ -73,21 +73,13 @@ by P, using F.
 combinator can be used to apply arithmetic operators like `+` and `*`
 when parsing an arithmetic expression.
 
-### `ParcAssert.hs`
+### `ParcAssert`
 
 With what we have so far, if we merely accumulate state as we parse,
 we can parse only context-free languages.
 
 But if we enable the parser to succeed or fail based on some predicate
 applied to the parsing state, we can parse context-sensitive languages.
-
-(Actually, if we don't restrict ourselves to sufficiently simple
-predicates, we can parse languages quite beyond the context-sensitive
-range.  For example, we could use a predicate which checks if the
-string passed to it is a valid sentence in Presburger arithmetic.
-Formulating a set of parser combinators which actually (and provably)
-is limited to parsing context-sensitive languages seems like a hard
-(maybe open) problem.)
 
 [`ParcAssertDemo.hs`](ParcAssertDemo.hs) uses `ParcSt2St` and adds a
 combinator called `assert` that takes such a predicate on the parsing
@@ -97,6 +89,47 @@ is true on the current parsing state, failing otherwise.
 The demo module gives an example of a parser for a classic
 context-free language: strings of the form `a`^_n_ `b`^_n_ `c`^_n_.
 
-### ... and more?
+### `ParcConsume`
 
-With luck, there will be further experiments added here over time.
+_This is where is starts getting markedly experimental._
+_Feel free to stop reading now._
+
+With `ParcAssert`, we can parse context-sensitive languages.  But
+if we don't restrict ourselves to passing sufficiently simple predicates
+to `assert`, we can parse languages quite beyond the context-sensitive
+range.  For example, we could use a predicate which checks if the
+string passed to it is a valid sentence in Presburger arithmetic, or
+even a valid computation trace of a Turing machine.
+
+Formulating a set of parser combinators which is actually (and provably)
+limited to parsing the context-sensitive languages seems like a hard
+problem.  One could probably create combinators that can describe
+any context-sensitive grammar (CSG), or an equivalent formalism such as
+a noncontracting grammar.  But these formalisms are actually extremely
+inefficient ways to parse most context-sensitive languages.
+
+We can take some small steps though.
+
+First, we can establish a proviso that we only ever expect the functions
+that are passed to the higher-order combinators, to do a small amount of
+computation.  For concreteness, say polynomial time.  (We could in fact
+assemble a library of "state manipulation combinators" and ensure those
+are the only ones that can be used, to try to enforce this.)
+
+But that by itself isn't enough.  If we allow combinators that recurse or
+loop without consuming input, we can perform arbitrarily large amounts
+of computation.
+
+So we get rid of `ok` and `many` and `update`, and instead of `assert`,
+use require the use of `pred`, which always consumes a character before it
+checks if it should succeed (possibly modifying the state) or fail.
+
+So [`ParcConsume.hs`](ParcConsume.hs) is a lot like `ParcSt2St`, just
+with things ripped out of it.
+
+[`ParcConsumeDemo.hs`](ParcConsumeDemo.hs) shows that it can recognize
+a context-sensitive language, and that the means by which it does so
+relies on it consuming its input; and the lack of other means of manipulating
+the state should be persuasive that it is limited in its ability to
+make these calculations.  Exactly how limited, though?  I'm not
+quite prepared to make a claim on that yet.

@@ -1,6 +1,11 @@
 Parc
 ====
 
+_Version 0.1_ | _See also:_ [Tandem](https://github.com/catseye/Tandem#readme)
+∘ [Vinegar](https://github.com/catseye/Vinegar#readme)
+
+- - - -
+
 Parser combinator libraries are easy to write.  That's why GitHub is full of them.
 
 I wanted to write a particularly simple one, both to expose its structure,

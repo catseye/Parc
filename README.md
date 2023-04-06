@@ -97,7 +97,7 @@ context-free language: strings of the form `a`^_n_ `b`^_n_ `c`^_n_.
 
 ### `ParcConsume`
 
-_This is where is starts getting markedly experimental._
+_This is where it starts getting markedly experimental._
 _Feel free to stop reading now._
 
 With `ParcAssert`, we can parse context-sensitive languages.  But

@@ -102,13 +102,13 @@ _Feel free to stop reading now._
 
 With `ParcAssert`, we can parse context-sensitive languages.  But
 if we don't restrict ourselves to passing sufficiently simple predicates
-to `assert`, we can parse languages quite beyond the context-sensitive
-range.  For example, we could use a predicate which checks if the
+to `assert`, we can parse languages quite beyond the context-sensitive.
+For example, we could use a predicate that checks if the
 string passed to it is a valid sentence in Presburger arithmetic, or
 even a valid computation trace of a Turing machine.
 
-Formulating a set of parser combinators which is actually (and provably)
-limited to parsing the context-sensitive languages seems like a hard
+Formulating a set of parser combinators which is provably capable
+of parsing _only_ the context-sensitive languages seems like a hard
 problem.  One could probably create combinators that can describe
 any context-sensitive grammar (CSG), or an equivalent formalism such as
 a noncontracting grammar.  But these formalisms are actually extremely
@@ -117,21 +117,21 @@ inefficient ways to parse most context-sensitive languages.
 We can take some small steps though.
 
 First, we can establish a proviso that we only ever expect the functions
-that are passed to the higher-order combinators, to do a small amount of
+that are passed to our higher-order combinators to do a small amount of
 computation.  For concreteness, say polynomial time.  (We could in fact
 assemble a library of "state manipulation combinators" and ensure those
-are the only ones that can be used, to try to enforce this.)
+are the only ones that can be used, to enforce this.)
 
 But that by itself isn't enough.  If we allow combinators that recurse or
-loop without consuming input, we can perform arbitrarily large amounts
-of computation.
+loop without consuming input, we can still perform arbitrarily large
+amounts of computation.
 
 So we get rid of `ok` and `many` and `update`, and instead of `assert`,
 use require the use of `pred`, which always consumes a character before it
 checks if it should succeed (possibly modifying the state) or fail.
 
-So [`ParcConsume.hs`](ParcConsume.hs) is a lot like `ParcSt2St`, just
-with things ripped out of it.
+And the result is [`ParcConsume.hs`](ParcConsume.hs), which is a lot
+like `ParcSt2St`, just with some things ripped out of it.
 
 [`ParcConsumeDemo.hs`](ParcConsumeDemo.hs) shows that it can recognize
 a context-sensitive language, and that the means by which it does so

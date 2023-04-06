@@ -17,6 +17,12 @@ Generally, you want to do more with the input string than say whether it
 is or is not in the language, yes?  So, there are more extended
 versions here too.
 
+(Before getting to the extended versions, I want to highlight one thing,
+which is that the choice operator in Parc is _ordered choice_, as used in
+e.g. PEG parsers.  This is arguably less mathematically nice than
+the _non-deterministic choice_ used in e.g. context-free grammars,
+but it is unarguably simpler to implement.)
+
 ### `ParcSt`
 
 An extension that adds state to the parser, making it a _stateful parser_,
@@ -60,7 +66,7 @@ To allow finer manipulation of the parsing state, we extend `ParcSt2St.hs`
 with an extra combinator.  We can't build this combinator out of existing
 combinators; it needs to access the parse state directly.  Also, its
 definition turns out to be somewhat more complicated.  So, this is where
-we start leaving "fits on a page" territory
+we start leaving "fits on a page" territory.
 
 The [`ParcMerge.hs`](ParcMerge.hs) module extends `ParcSt2St.hs` with a
 combinator called `merge`.  `merge` takes a parser P and a function F which

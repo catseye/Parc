@@ -1,8 +1,8 @@
 Parc
 ====
 
-_Version 0.1_ | _See also:_ [Tandem](https://github.com/catseye/Tandem#readme)
-∘ [Vinegar](https://github.com/catseye/Vinegar#readme)
+_Version 0.1_ | _See also:_ [Tandem](https://codeberg.org/catseye/Tandem#tandem)
+∘ [Vinegar](https://codeberg.org/catseye/Vinegar#vinegar)
 
 - - - -
 
